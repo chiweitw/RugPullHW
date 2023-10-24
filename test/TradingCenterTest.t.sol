@@ -24,6 +24,8 @@ contract TradingCenterTest is Test {
   UpgradeableProxy proxy;
   IERC20 usdt;
   IERC20 usdc;
+  TradingCenterV2 tradingCenterV2;
+  TradingCenterV2 proxyTradingCenterV2;
 
   // Initial balances
   uint256 initialBalance = 100000 ether;
@@ -63,7 +65,7 @@ contract TradingCenterTest is Test {
     usdc.approve(address(proxyTradingCenter), type(uint256).max);
     vm.stopPrank();
 
-    // user1 approve to proxyTradingCenter
+    // user2 approve to proxyTradingCenter
     vm.startPrank(user2);
     usdt.approve(address(proxyTradingCenter), type(uint256).max);
     usdc.approve(address(proxyTradingCenter), type(uint256).max);
@@ -71,26 +73,40 @@ contract TradingCenterTest is Test {
   }
 
   function testUpgrade() public {
+
     // TODO:
     // Let's pretend that you are proxy owner
     // Try to upgrade the proxy to TradingCenterV2
     // And check if all state are correct (initialized, usdt address, usdc address)
+
+    vm.startPrank(owner);
+    tradingCenterV2 = new TradingCenterV2();
+    proxy.upgradeTo(address(tradingCenterV2));
+
     assertEq(proxyTradingCenter.initialized(), true);
     assertEq(address(proxyTradingCenter.usdc()), address(usdc));
     assertEq(address(proxyTradingCenter.usdt()), address(usdt));
+    vm.stopPrank();
   }
 
   function testRugPull() public {
-
     // TODO: 
     // Let's pretend that you are proxy owner
     // Try to upgrade the proxy to TradingCenterV2
     // And empty users' usdc and usdt
+    vm.startPrank(owner);
+    tradingCenterV2 = new TradingCenterV2();
+    proxy.upgradeTo(address(tradingCenterV2));
+    (bool success,) = address(proxyTradingCenter).call(abi.encodeWithSignature("rugPull(address)", user1));
+    (bool success2,) = address(proxyTradingCenter).call(abi.encodeWithSignature("rugPull(address)", user2));
+    require(success);
+    require(success2);
 
-    // Assert users's balances are 0
+    // // Assert users's balances are 0
     assertEq(usdt.balanceOf(user1), 0);
     assertEq(usdc.balanceOf(user1), 0);
     assertEq(usdt.balanceOf(user2), 0);
     assertEq(usdc.balanceOf(user2), 0);
+    // vm.stopPrank();
   }
 }
