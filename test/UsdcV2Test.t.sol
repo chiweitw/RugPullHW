@@ -9,8 +9,8 @@ contract UsdcV2Test is Test {
     address user1;
     address user2;
     address private admin;
-    address public constant owner = 0xFcb19e6a322b27c06842A71e8c725399f049AE3a;
-    address public constant contractProxy = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    address private owner;
+    address private constant contractProxy = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     bytes32 private constant ADMIN_SLOT = 0x10d6a54a4754c8869d6886b5f5d7fbfa5b4522237ea5c60d11bc4e7a1ff9390b;
     UsdcV2 usdc;
 
@@ -22,8 +22,13 @@ contract UsdcV2Test is Test {
 
         // Get admin
         bytes32 adminSlotVal = vm.load(contractProxy, ADMIN_SLOT);
-        // console2.logBytes32(adminSlotVal);
-        admin = address(uint160(uint256(adminSlotVal)));
+        // console2.logBytes32(adminSlotVal); // 0x000000000000000000000000807a96288a1a408dbc13de2b1d087d10356395d2
+        admin = address(uint160(uint256(adminSlotVal))); // 0x807a96288a1a408dbc13de2b1d087d10356395d2
+
+        // Get owner
+        bytes32 ownerSlotVal = vm.load(contractProxy, 0);
+        // console2.logBytes32(ownerSlotVal); // 0x000000000000000000000000fcb19e6a322b27c06842a71e8c725399f049ae3a
+        owner = address(uint160(uint256(ownerSlotVal))); // 0xfcb19e6a322b27c06842a71e8c725399f049ae3a
 
         user1 = makeAddr("Alice");
         user2 = makeAddr("Bob");
