@@ -4,6 +4,9 @@
 [submodule "lib/solmate"]
 	path = lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "lib/centre-tokens"]
+	path = lib/centre-tokens
+	url = https://github.com/centrehq/centre-tokens.git
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
-	url = https://github.com/openzeppelin/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts/blob/v2.5.1
