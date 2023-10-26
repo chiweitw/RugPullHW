@@ -30,9 +30,6 @@ contract UsdcV2Test is Test {
 
         vm.label(user1, "Alice");
         vm.label(user2, "Bob");
-
-        // Let user1 have initial balances of usdc
-        deal(contractProxy, user1, 10 ether);
         
         // Upgrade logic contract
         vm.startPrank(admin);
@@ -47,7 +44,7 @@ contract UsdcV2Test is Test {
          assertEq(vm.activeFork(), mainnetFork);
     }
 
-    function testWhitelistOwnerCanAdd() public {
+    function testWhitelist() public {
         vm.startPrank(owner);
 
         // use low level call
@@ -61,6 +58,16 @@ contract UsdcV2Test is Test {
         vm.stopPrank();
     }
 
+    function testWhitelistNotOwner() public {
+        vm.startPrank(user1);
+
+        vm.expectRevert("Not Owner");
+
+        UsdcV2(contractProxy).addToWhitelist(user1);
+        
+        vm.stopPrank();
+    }
+
     function testWitelistCannotTransfer() public {
         vm.startPrank(user1);
 
@@ -69,11 +76,15 @@ contract UsdcV2Test is Test {
     }
     
     function testWhitelistCanTransfer() public {
+        // Let user1 have initial balances of usdc
+        deal(contractProxy, user1, 1 ether);
+        
         // add to whitelist
         vm.startPrank(owner);
         UsdcV2(contractProxy).addToWhitelist(user1);
 
         vm.startPrank(user1);
+        console2.log(UsdcV2(contractProxy).balanceOf(user1));
         UsdcV2(contractProxy).transfer(user2, 1 ether);
 
         assertEq(UsdcV2(contractProxy).balanceOf(user2), 1 ether);

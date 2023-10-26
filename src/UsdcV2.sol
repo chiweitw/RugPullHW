@@ -8,12 +8,17 @@ contract UsdcV2 is ERC20 {
 
     constructor(string memory name, string memory symbol) ERC20(name, symbol){}
 
+    modifier isOwner {
+        require(msg.sender == 0xFcb19e6a322b27c06842A71e8c725399f049AE3a, "Not Owner");
+        _;
+    }
+
     modifier isWhitelist {
             require(whitelist[msg.sender], "Not in Whitelist!");
             _;
     }
 
-    function addToWhitelist(address addr) public {
+    function addToWhitelist(address addr) external isOwner {
         whitelist[addr] = true;
     }
 
