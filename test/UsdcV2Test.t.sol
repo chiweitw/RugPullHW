@@ -33,7 +33,7 @@ contract UsdcV2Test is Test {
         
         // Upgrade logic contract
         vm.startPrank(admin);
-        usdc = new UsdcV2("USDC", "USDC");
+        usdc = new UsdcV2();
         (bool success, ) = contractProxy.call(abi.encodeWithSignature("upgradeTo(address)", address(usdc)));
         require(success, "Not successfully upgrage!");
 
@@ -83,11 +83,12 @@ contract UsdcV2Test is Test {
         vm.startPrank(owner);
         UsdcV2(contractProxy).addToWhitelist(user1);
 
+
         vm.startPrank(user1);
-        console2.log(UsdcV2(contractProxy).balanceOf(user1));
+        // console2.log(UsdcV2(contractProxy).balances(user1));
         UsdcV2(contractProxy).transfer(user2, 1 ether);
 
-        assertEq(UsdcV2(contractProxy).balanceOf(user2), 1 ether);
+        assertEq(UsdcV2(contractProxy).balances(user2), 1 ether);
 
         vm.stopPrank();
     }
