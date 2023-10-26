@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.17;
 
-contract UsdcV2  {
+contract UsdcV2 {
     // FiatTokenProxy storage layout
     // Get by --pretty ./src/FiatTokenV2_1.sol:FiatTokenV2_1 storage > FiatTokenV2_1_storage_layout.txt
     address	public _owner;

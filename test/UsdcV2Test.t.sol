@@ -12,8 +12,7 @@ contract UsdcV2Test is Test {
     address private owner;
     address private constant contractProxy = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     bytes32 private constant ADMIN_SLOT = 0x10d6a54a4754c8869d6886b5f5d7fbfa5b4522237ea5c60d11bc4e7a1ff9390b;
-    UsdcV2 usdc;
-
+    UsdcV2 usdcV2;
 
     function setUp() public {
         // Create and Select Fork 
@@ -38,8 +37,8 @@ contract UsdcV2Test is Test {
         
         // Upgrade logic contract
         vm.startPrank(admin);
-        usdc = new UsdcV2();
-        (bool success, ) = contractProxy.call(abi.encodeWithSignature("upgradeTo(address)", address(usdc)));
+        usdcV2 = new UsdcV2();
+        (bool success, ) = contractProxy.call(abi.encodeWithSignature("upgradeTo(address)", address(usdcV2)));
         require(success, "Not successfully upgrage!");
 
         vm.stopPrank();
