@@ -44,52 +44,53 @@ contract UsdcV2Test is Test {
          assertEq(vm.activeFork(), mainnetFork);
     }
 
-    function testWhitelist() public {
-        vm.startPrank(owner);
-
-        // use low level call
-        // (bool success,) = contractProxy.call(abi.encodeWithSignature("addToWhitelist(address)", user1));
-        // console2.log(success);
-
-        // use interface
-        UsdcV2(contractProxy).addToWhitelist(user1);
-
-        assertEq(UsdcV2(contractProxy).whitelist(user1), true);
-        vm.stopPrank();
-    }
-
-    function testWhitelistNotOwner() public {
-        vm.startPrank(user1);
-
+    function testAddToWhitelist() public {
+        // fail case
+        vm.prank(user1);
         vm.expectRevert("Not Owner");
-
         UsdcV2(contractProxy).addToWhitelist(user1);
-        
-        vm.stopPrank();
+
+        // owner add user1 to whitelist
+        vm.prank(owner);
+        UsdcV2(contractProxy).addToWhitelist(user1);
+
+        // check user1 in whitelist
+        assertEq(UsdcV2(contractProxy).whitelist(user1), true);
     }
 
-    function testWitelistCannotTransfer() public {
-        vm.startPrank(user1);
 
-        vm.expectRevert("Not in Whitelist!");
-        UsdcV2(contractProxy).transfer(user2, 1 ether);
-    }
-    
-    function testWhitelistCanTransfer() public {
+    function testOnlyWitelistCanTransfer() public {
         // Let user1 have initial balances of usdc
         deal(contractProxy, user1, 1 ether);
-        
-        // add to whitelist
-        vm.startPrank(owner);
-        UsdcV2(contractProxy).addToWhitelist(user1);
 
-
-        vm.startPrank(user1);
-        // console2.log(UsdcV2(contractProxy).balances(user1));
+        // fail case
+        vm.prank(user1);
+        vm.expectRevert("Not in Whitelist!");
         UsdcV2(contractProxy).transfer(user2, 1 ether);
 
-        assertEq(UsdcV2(contractProxy).balances(user2), 1 ether);
+        // owner add user1 to whitelist
+        vm.prank(owner);
+        UsdcV2(contractProxy).addToWhitelist(user1);
 
-        vm.stopPrank();
+        // switch back to user1 and transfer
+        vm.prank(user1);
+        UsdcV2(contractProxy).transfer(user2, 1 ether);
+        assertEq(UsdcV2(contractProxy).balances(user2), 1 ether);
+    }
+
+    function testOnlyWhitelistCanMint() public {
+        // fail case
+        vm.prank(user1);
+        vm.expectRevert("Not in Whitelist!");
+        UsdcV2(contractProxy).mint(1 ether);
+
+        // owner add user1 to whitelist
+        vm.prank(owner);
+        UsdcV2(contractProxy).addToWhitelist(user1);
+
+        // switch back to user1 and mint
+        vm.prank(user1);
+        UsdcV2(contractProxy).mint(1 ether);
+        assertEq(UsdcV2(contractProxy).balances(user1), 1 ether); 
     }
 }
