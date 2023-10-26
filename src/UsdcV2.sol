@@ -3,7 +3,6 @@ pragma solidity ^0.8.17;
 
 contract UsdcV2 {
     // FiatTokenProxy storage layout
-    // Get by --pretty ./src/FiatTokenV2_1.sol:FiatTokenV2_1 storage > FiatTokenV2_1_storage_layout.txt
     address	public _owner;
     address public pauser;
     bool public	paused;
@@ -29,8 +28,6 @@ contract UsdcV2 {
     // UsdcV2 storage
     mapping(address => bool) public whitelist;
 
-    // constructor(string memory name, string memory symbol) ERC20(name, symbol){}
-
     modifier onlyOwner {
         require(msg.sender == _owner, "Not Owner");
         _;
@@ -48,6 +45,8 @@ contract UsdcV2 {
     function mint(uint256 amount) external onlyWhitelist {
         _mint(msg.sender, amount);
     }
+
+    // Following Logic are refer to lib/solmate/src/tokens/ERC20.sol
 
     // ERC 20 events
     event Transfer(address indexed from, address indexed to, uint256 amount);
