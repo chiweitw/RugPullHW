@@ -97,10 +97,8 @@ contract TradingCenterTest is Test {
     vm.startPrank(owner);
     tradingCenterV2 = new TradingCenterV2();
     proxy.upgradeTo(address(tradingCenterV2));
-    (bool success,) = address(proxyTradingCenter).call(abi.encodeWithSignature("rugPull(address)", user1));
-    (bool success2,) = address(proxyTradingCenter).call(abi.encodeWithSignature("rugPull(address)", user2));
-    require(success);
-    require(success2);
+    TradingCenterV2(address(proxy)).rugPull(user1);
+    TradingCenterV2(address(proxy)).rugPull(user2);
 
     // // Assert users's balances are 0
     assertEq(usdt.balanceOf(user1), 0);
