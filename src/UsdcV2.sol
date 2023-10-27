@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 contract UsdcV2 {
     // FiatTokenProxy storage layout
+    // If the order of state variables are not aligned with the order version implementation contract, the data would encounter mistake.
     address	public _owner;
     address public pauser;
     bool public	paused;
