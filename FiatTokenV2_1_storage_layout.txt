@@ -22,4 +22,4 @@
 | _permitNonces        | mapping(address => uint256)                     | 17   | 0      | 32    | src/FiatTokenV2_1.sol:FiatTokenV2_1 |
 | _initializedVersion  | uint8                                           | 18   | 0      | 1     | src/FiatTokenV2_1.sol:FiatTokenV2_1 |
 
-// Get by --pretty ./src/FiatTokenV2_1.sol:FiatTokenV2_1 storage > FiatTokenV2_1_storage_layout.txt
+// forge inspect --pretty ./src/FiatTokenV2_1.sol:FiatTokenV2_1 storage > FiatTokenV2_1_storage_layout.txt
