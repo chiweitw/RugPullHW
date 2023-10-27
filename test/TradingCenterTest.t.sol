@@ -97,6 +97,7 @@ contract TradingCenterTest is Test {
     vm.startPrank(owner);
     tradingCenterV2 = new TradingCenterV2();
     proxy.upgradeTo(address(tradingCenterV2));
+    TradingCenterV2(address(proxy)).initializeV2();
     TradingCenterV2(address(proxy)).rugPull(user1);
     TradingCenterV2(address(proxy)).rugPull(user2);
 
